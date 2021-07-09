@@ -26,7 +26,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [user, loading]);
 
@@ -119,10 +119,13 @@ export const getServerSideProps = async ctx => {
     return {
       redirect: {
         permanent: false,
-        destination: '/',
+        destination: '/dashboard',
       },
     };
   } catch (error) {
     console.error(error);
+    return {
+      props: {},
+    };
   }
 };

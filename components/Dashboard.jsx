@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import {
   IconButton,
   Avatar,
@@ -10,23 +11,16 @@ import {
   VStack,
   Icon,
   useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { FiHome, FiCompass, FiStar, FiMenu, FiBell } from 'react-icons/fi';
-import { GrGroup, GrLogout } from 'react-icons/gr';
+import { GrLogout } from 'react-icons/gr';
 import { BiUser } from 'react-icons/bi';
+import { MdCardTravel } from 'react-icons/md';
 import { useAuth } from '@/context/AuthUserContext';
-
-const LinkItems = [
-  { id: 0, name: 'Overview', icon: FiHome },
-  { id: 1, name: 'Groups', icon: GrGroup },
-  { id: 2, name: 'Explore', icon: FiCompass },
-  { id: 3, name: 'Favorites', icon: FiStar },
-];
 
 export default function Dashboard({ user, children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,8 +67,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map(({ id, name, icon }) => (
-        <NavItem key={id} icon={icon}>
+      {LinkItems.map(({ name, href, icon }) => (
+        <NavItem key={name} href={href} icon={icon}>
           {name}
         </NavItem>
       ))}
@@ -82,9 +76,16 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, children, ...rest }) => {
+const LinkItems = [
+  { name: 'Overview', href: '/dashboard/overview', icon: FiHome },
+  { name: 'Explore', href: '/dashboard/explore', icon: FiCompass },
+  { name: 'Travels', href: '/dashboard/travels', icon: MdCardTravel },
+  { name: 'Favorites', href: '/dashboard/favorites', icon: FiStar },
+];
+
+const NavItem = ({ icon, href, children, ...rest }) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }}>
+    <NextLink href={href} style={{ textDecoration: 'none' }}>
       <Flex
         align="center"
         p="4"
@@ -110,7 +111,7 @@ const NavItem = ({ icon, children, ...rest }) => {
         )}
         {children}
       </Flex>
-    </Link>
+    </NextLink>
   );
 };
 
