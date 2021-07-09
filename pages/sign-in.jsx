@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import nookies from 'nookies';
 import {
   Flex,
   Box,
@@ -17,8 +18,9 @@ import {
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useAuth } from '@/context/AuthUserContext';
+import firebaseAdmin from '@/lib/firebase-admin';
 
-const SignIn = () => {
+export default function SignIn() {
   const router = useRouter();
   const { user, loading, signInWithEmailAndPassword } = useAuth();
 
@@ -35,8 +37,7 @@ const SignIn = () => {
     },
     onSubmit: async ({ email, password }) => {
       try {
-        const result = await signInWithEmailAndPassword(email, password);
-        console.log('result', result);
+        await signInWithEmailAndPassword(email, password);
       } catch (error) {
         console.error(error);
       }
@@ -106,6 +107,22 @@ const SignIn = () => {
       </Stack>
     </Flex>
   );
-};
+}
 
-export default SignIn;
+export const getServerSideProps = async ctx => {
+  try {
+    const cookies = nookies.get(ctx);
+    const token = cookies['loom-token'];
+
+    await firebaseAdmin.auth().verifyIdToken(token);
+
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    };
+  } catch (error) {
+    console.error(error);
+  }
+};

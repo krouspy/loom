@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import nookies from 'nookies';
 import firebase from '@/lib/firebase';
 
 const formatAuthUser = user => ({
@@ -27,17 +28,26 @@ export default function useFirebaseAuth() {
     return firebase.auth().signOut().then(clear);
   };
 
-  const authStateChanged = async authState => {
-    if (!authState) {
+  const authStateChanged = async user => {
+    if (!user) {
       setUser(null);
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-    const formattedUser = formatAuthUser(authState);
+    const formattedUser = formatAuthUser(user);
     setUser(formattedUser);
     setLoading(false);
+  };
+
+  const idTokenChanged = async user => {
+    if (!user) {
+      nookies.set(undefined, 'loom-token', '', { path: '/' });
+      return;
+    }
+
+    const token = await user.getIdToken();
+    nookies.set(undefined, 'loom-token', token, { path: '/' });
   };
 
   useEffect(() => {
@@ -45,5 +55,16 @@ export default function useFirebaseAuth() {
     return () => unsubscribe();
   }, []);
 
-  return { user, loading, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onIdTokenChanged(idTokenChanged);
+    return () => unsubscribe();
+  }, []);
+
+  return {
+    user,
+    loading,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+  };
 }

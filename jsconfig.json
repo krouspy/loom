@@ -6,7 +6,8 @@
       "@/hooks/*": ["hooks/*"],
       "@/context/*": ["context/*"],
       "@/components/*": ["components/*"],
-      "@/utils/*": ["utils/*"]
+      "@/utils/*": ["utils/*"],
+      "@config": ["config.js"]
     }
   }
 }

@@ -44,7 +44,7 @@ export default function SignUp() {
         };
         await postRequest('/api/sign-up', body);
 
-        // router.push('protected');
+        router.push('/');
       } catch (error) {
         console.error(error);
       }

@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import {
   IconButton,
   Avatar,
   Box,
+  Button,
   CloseButton,
   Flex,
   HStack,
@@ -14,14 +15,10 @@ import {
   DrawerContent,
   Text,
   useDisclosure,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
 } from '@chakra-ui/react';
-import { FiHome, FiCompass, FiStar, FiMenu, FiBell, FiChevronDown } from 'react-icons/fi';
-import { GrGroup } from 'react-icons/gr';
+import { FiHome, FiCompass, FiStar, FiMenu, FiBell } from 'react-icons/fi';
+import { GrGroup, GrLogout } from 'react-icons/gr';
+import { BiUser } from 'react-icons/bi';
 import { useAuth } from '@/context/AuthUserContext';
 
 const LinkItems = [
@@ -31,7 +28,7 @@ const LinkItems = [
   { id: 3, name: 'Favorites', icon: FiStar },
 ];
 
-export default function Dashboard({ children }) {
+export default function Dashboard({ user, children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -50,7 +47,7 @@ export default function Dashboard({ children }) {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} user={user} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
@@ -117,8 +114,16 @@ const NavItem = ({ icon, children, ...rest }) => {
   );
 };
 
-const MobileNav = ({ onOpen, ...rest }) => {
-  const { user, signOut } = useAuth();
+const MobileNav = ({ onOpen, user, ...rest }) => {
+  const router = useRouter();
+  const { signOut } = useAuth();
+  const fullname = `${user?.firstname} ${user?.lastname}`;
+
+  const logout = async () => {
+    await signOut();
+    router.push('/sign-in');
+  };
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -151,40 +156,20 @@ const MobileNav = ({ onOpen, ...rest }) => {
       <HStack spacing={{ base: '0', md: '6' }}>
         <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
         <Flex alignItems={'center'}>
-          <Menu>
-            <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
-              <HStack>
-                <Avatar
-                  size="sm"
-                  src="https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                />
-                <VStack
-                  display={{ base: 'none', md: 'flex' }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2"
-                >
-                  <Text fontSize="sm">john.doe@gmai.com</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
-                </VStack>
-                <Box display={{ base: 'none', md: 'flex' }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </MenuButton>
-            <MenuList
-              bg={useColorModeValue('white', 'gray.900')}
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
-            </MenuList>
-          </Menu>
+          <Button variant="ghost">
+            <HStack>
+              <Avatar size="sm" icon={<BiUser fontSize="1.5rem" />} />
+              <VStack
+                display={{ base: 'none', md: 'flex' }}
+                alignItems="flex-start"
+                spacing="1px"
+                ml="2"
+              >
+                <Text fontSize="sm">{fullname}</Text>
+              </VStack>
+            </HStack>
+          </Button>
+          <IconButton size="lg" variant="ghost" icon={<GrLogout />} onClick={logout} />
         </Flex>
       </HStack>
     </Flex>
