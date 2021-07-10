@@ -1,14 +1,12 @@
-import admin from '@/lib/firebase-admin';
-
-const db = admin.firestore();
+import withFirestore from '@/middlewares/withFirestore';
 
 const handler = async (req, res) => {
   try {
-    const { body, method } = req;
+    const { body, method, firestore } = req;
 
     switch (method) {
       case 'GET': {
-        const locations = await db.collection('locations').get();
+        const locations = await firestore.collection('locations').get();
 
         const result = [];
         locations.forEach(doc => {
@@ -20,7 +18,7 @@ const handler = async (req, res) => {
       }
       case 'POST': {
         const { name, country, city, price } = body;
-        await db.collection('locations').add({
+        await firestore.collection('locations').add({
           name,
           country,
           city,
@@ -39,4 +37,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler;
+export default withFirestore(handler);

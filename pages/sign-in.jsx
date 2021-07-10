@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useAuth } from '@/context/AuthUserContext';
-import firebaseAdmin from '@/lib/firebase-admin';
+import firebaseAdmin from '@/firebase/firebase-admin';
 
 export default function SignIn() {
   const router = useRouter();

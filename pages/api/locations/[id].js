@@ -1,4 +1,4 @@
-import admin from '@/lib/firebase-admin';
+import admin from '@/firebase/firebase-admin';
 
 const db = admin.firestore();
 

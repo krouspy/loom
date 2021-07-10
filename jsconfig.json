@@ -2,10 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/lib/*": ["lib/*"],
+      "@/firebase/*": ["firebase/*"],
       "@/hooks/*": ["hooks/*"],
       "@/context/*": ["context/*"],
       "@/components/*": ["components/*"],
+      "@/middlewares/*": ["middlewares/*"],
       "@/utils/*": ["utils/*"],
       "@config": ["config.js"]
     }

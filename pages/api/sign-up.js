@@ -1,6 +1,4 @@
-import admin from '@/lib/firebase-admin';
-
-const db = admin.firestore();
+import withFirestore from '@/middlewares/withFirestore';
 
 const handler = async (req, res) => {
   if (req.method !== 'POST') {
@@ -10,7 +8,9 @@ const handler = async (req, res) => {
 
   try {
     const { uid, email, firstname, lastname } = req.body;
-    await db.collection('users').doc(uid).set({
+    const { firestore } = req;
+
+    await firestore.collection('users').doc(uid).set({
       email: email.toLowerCase(),
       firstname,
       lastname,
@@ -22,4 +22,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler;
+export default withFirestore(handler);

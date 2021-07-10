@@ -1,6 +1,4 @@
-import admin from '@/lib/firebase-admin';
-
-const db = admin.firestore();
+import withFirestore from '@/middlewares/withFirestore';
 
 const handler = async (req, res) => {
   try {
@@ -8,11 +6,12 @@ const handler = async (req, res) => {
       query: { id },
       body,
       method,
+      firestore,
     } = req;
 
     switch (method) {
       case 'GET': {
-        const doc = await db.collection('users').doc(id).get();
+        const doc = await firestore.collection('users').doc(id).get();
 
         if (!doc.exists) {
           res.status(404).json({ result: 'User Not Found' });
@@ -32,4 +31,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler;
+export default withFirestore(handler);

@@ -1,14 +1,12 @@
-import admin from '@/lib/firebase-admin';
-
-const db = admin.firestore();
+import withFirestore from '@/middlewares/withFirestore';
 
 const handler = async (req, res) => {
   try {
-    const { body, method } = req;
+    const { body, method, firestore } = req;
 
     switch (method) {
       case 'GET': {
-        const users = await db.collection('users').get();
+        const users = await firestore.collection('users').get();
 
         const result = [];
         users.forEach(doc => {
@@ -28,4 +26,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler;
+export default withFirestore(handler);

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import { Box } from '@chakra-ui/react';
 import Dashboard from '@/components/Dashboard';
-import firebaseAdmin from '@/lib/firebase-admin';
+import firebaseAdmin from '@/firebase/firebase-admin';
 import { domain } from '@config';
 
 export default function Home({ user }) {
