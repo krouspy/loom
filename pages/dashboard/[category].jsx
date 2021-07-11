@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import { Box } from '@chakra-ui/react';
 import Dashboard from '@/components/Dashboard';
-import firebaseAdmin from '@/firebase/firebase-admin';
 import { domain } from '@config';
+import withFirebaseAdmin from '@/middlewares/withFirebaseAdmin';
 
 export default function Home({ user }) {
   const router = useRouter();
@@ -18,10 +18,15 @@ export default function Home({ user }) {
   );
 }
 
-export const getServerSideProps = async ctx => {
+export const getServerSideProps = withFirebaseAdmin(async ctx => {
   try {
     const cookies = nookies.get(ctx);
     const token = cookies['loom-token'];
+
+    const {
+      req: { firebaseAdmin },
+    } = ctx;
+
     const { uid } = await firebaseAdmin.auth().verifyIdToken(token);
 
     const uri = `${domain}/api/users/${uid}`;
@@ -49,4 +54,4 @@ export const getServerSideProps = async ctx => {
       },
     };
   }
-};
+});

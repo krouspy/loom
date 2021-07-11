@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useAuth } from '@/context/AuthUserContext';
-import firebaseAdmin from '@/firebase/firebase-admin';
+import withFirebaseAdmin from '@/middlewares/withFirebaseAdmin';
 
 export default function SignIn() {
   const router = useRouter();
@@ -109,12 +109,16 @@ export default function SignIn() {
   );
 }
 
-export const getServerSideProps = async ctx => {
+export const getServerSideProps = withFirebaseAdmin(async ctx => {
   try {
     const cookies = nookies.get(ctx);
     const token = cookies['loom-token'];
 
-    await firebaseAdmin.auth().verifyIdToken(token);
+    const {
+      req: { firebaseAdmin },
+    } = ctx;
+
+    await firebaseAdmin.auth.verifyIdToken(token);
 
     return {
       redirect: {
@@ -123,9 +127,8 @@ export const getServerSideProps = async ctx => {
       },
     };
   } catch (error) {
-    console.error(error);
     return {
       props: {},
     };
   }
-};
+});
