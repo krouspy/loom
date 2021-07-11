@@ -1,6 +1,4 @@
-import admin from '@/firebase/firebase-admin';
-
-const db = admin.firestore();
+import withFirebase from '@/middlewares/withFirebase';
 
 const handler = async (req, res) => {
   try {
@@ -8,11 +6,12 @@ const handler = async (req, res) => {
       query: { id },
       body,
       method,
+      firebase: { firestore },
     } = req;
 
     switch (method) {
       case 'GET': {
-        const doc = await db.collection('locations').doc(id).get();
+        const doc = await firestore.collection('locations').doc(id).get();
 
         if (!doc.exists) {
           res.status(404).json({ result: 'Location Not Found' });
@@ -23,12 +22,12 @@ const handler = async (req, res) => {
         break;
       }
       case 'PUT': {
-        await db.collection('locations').doc(id).update(body);
+        await firestore.collection('locations').doc(id).update(body);
         res.status(200).json({ result: 'Success' });
         break;
       }
       case 'DELETE': {
-        await db.collection('locations').doc(id).delete();
+        await firestore.collection('locations').doc(id).delete();
         res.status(200).json({ result: 'Success' });
         break;
       }
@@ -42,4 +41,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler;
+export default withFirebase(handler);

@@ -1,8 +1,12 @@
-import withFirestore from '@/middlewares/withFirestore';
+import withFirebase from '@/middlewares/withFirebase';
 
 const handler = async (req, res) => {
   try {
-    const { body, method, firestore } = req;
+    const {
+      body,
+      method,
+      firebase: { firestore },
+    } = req;
 
     switch (method) {
       case 'GET': {
@@ -26,4 +30,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default withFirestore(handler);
+export default withFirebase(handler);

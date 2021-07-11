@@ -3,7 +3,7 @@ import nookies from 'nookies';
 import { Box } from '@chakra-ui/react';
 import Dashboard from '@/components/layouts/Dashboard';
 import { domain } from '@config';
-import withFirebaseAdmin from '@/middlewares/withFirebaseAdmin';
+import withFirebase from '@/middlewares/withFirebase';
 
 export default function Home() {
   const router = useRouter();
@@ -20,16 +20,16 @@ export default function Home() {
 
 Home.Layout = Dashboard;
 
-export const getServerSideProps = withFirebaseAdmin(async ctx => {
+export const getServerSideProps = withFirebase(async ctx => {
   try {
     const cookies = nookies.get(ctx);
     const token = cookies['loom-token'];
 
     const {
-      req: { firebaseAdmin },
+      firebase: { admin },
     } = ctx;
 
-    const { uid } = await firebaseAdmin.auth().verifyIdToken(token);
+    const { uid } = await admin.auth().verifyIdToken(token);
 
     const uri = `${domain}/api/users/${uid}`;
     const res = await fetch(uri);

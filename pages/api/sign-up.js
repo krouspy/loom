@@ -1,4 +1,4 @@
-import withFirestore from '@/middlewares/withFirestore';
+import withFirebase from '@/middlewares/withFirebase';
 
 const handler = async (req, res) => {
   if (req.method !== 'POST') {
@@ -8,7 +8,9 @@ const handler = async (req, res) => {
 
   try {
     const { uid, email, firstname, lastname } = req.body;
-    const { firestore } = req;
+    const {
+      firebase: { firestore },
+    } = req;
 
     await firestore.collection('users').doc(uid).set({
       email: email.toLowerCase(),
@@ -22,4 +24,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default withFirestore(handler);
+export default withFirebase(handler);
