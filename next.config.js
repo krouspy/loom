@@ -4,12 +4,7 @@ module.exports = {
     return [
       {
         source: '/',
-        destination: '/dashboard/overview',
-        permanent: true,
-      },
-      {
-        source: '/dashboard',
-        destination: '/dashboard/overview',
+        destination: '/dashboard',
         permanent: true,
       },
     ];

@@ -4,7 +4,7 @@ import { FiHome, FiCompass, FiStar } from 'react-icons/fi';
 import { MdCardTravel } from 'react-icons/md';
 
 const LinkItems = [
-  { name: 'Overview', href: '/dashboard/overview', icon: FiHome },
+  { name: 'Overview', href: '/dashboard', icon: FiHome },
   { name: 'Explore', href: '/dashboard/explore', icon: FiCompass },
   { name: 'Travels', href: '/dashboard/travels', icon: MdCardTravel },
   { name: 'Favorites', href: '/dashboard/favorites', icon: FiStar },
