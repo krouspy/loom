@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
 import { Box } from '@chakra-ui/react';
-import Dashboard from '@/components/Dashboard';
+import Dashboard from '@/components/layouts/Dashboard';
 import { domain } from '@config';
 import withFirebaseAdmin from '@/middlewares/withFirebaseAdmin';
 
-export default function Home({ user }) {
+export default function Home() {
   const router = useRouter();
   const {
     query: { category },
@@ -13,10 +13,12 @@ export default function Home({ user }) {
 
   return (
     <Box w="100vw" minH="100vh">
-      <Dashboard user={user}>Hello {category}</Dashboard>
+      Hello {category}
     </Box>
   );
 }
+
+Home.Layout = Dashboard;
 
 export const getServerSideProps = withFirebaseAdmin(async ctx => {
   try {
